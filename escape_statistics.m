@@ -4,7 +4,7 @@ mean_times = zeros(size(eps_range));
 all_times = cell(size(eps_range));
 x2r = reshape(x, system.d, []);
 
-dtmax = 100000;
+dtmax = 10000000;
 
 if nargin < 4
     trials = 5000;
@@ -17,15 +17,15 @@ parfor (e_c = 1:length(eps_range), 4)
     %h = waitbar(0, 'Simulating');
     for trial=1:trials
         %disp(trial)
-        xout = simulate_system(system, x2r, 0.001, dtmax, eps,1);
-        times(trial) = length(xout);
+        [~, ~, time] = simulate_system(system, x2r, 0.001, dtmax, eps,1);
+        times(trial) = time;
         %waitbar(trial/trials, h);
         if mod(trial, 20) ==0
             disp(trial);
         end
     end
     %close(h);
-    avg_time = sum(times)/sum(times~=(dtmax+1));
+    avg_time = sum(times)/sum(times~=(dtmax));
     %disp(avg_time)
     mean_times(e_c) = avg_time;
     all_times{e_c} = times;
